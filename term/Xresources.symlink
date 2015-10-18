@@ -1,5 +1,6 @@
 XTerm*locale: true
 XTerm*saveLines: 4096
 
-XTerm*faceName: Inconsolata
-XTerm*faceSize: 14
+XTerm*faceName: DejaVu Sans Mono
+XTerm*faceSize: 12
+XTerm*utf8: 1

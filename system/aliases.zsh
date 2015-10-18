@@ -1,3 +1,4 @@
-alias ll="ls -lr"
-alias la="ls -la"
+alias l="ls --color"
+alias ll="ls -lr --color"
+alias la="ls -la --color"
 
