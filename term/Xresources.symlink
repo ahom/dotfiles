@@ -1,0 +1,5 @@
+XTerm*locale: true
+XTerm*saveLines: 4096
+
+XTerm*faceName: Inconsolata
+XTerm*faceSize: 14
