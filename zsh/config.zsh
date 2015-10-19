@@ -23,3 +23,4 @@ setopt HIST_REDUCE_BLANKS
 
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
+bindkey "\e[3~" delete-char
