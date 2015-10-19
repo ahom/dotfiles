@@ -1,0 +1,6 @@
+#!/bin/bash
+
+scrot /tmp/lock_screenshot.png
+convert /tmp/lock_screenshot.png -blur 0x6 /tmp/blurred_lock_screenshot.png
+rm -f /tmp/lock_screenshot.png
+i3lock -i /tmp/blurred_lock_screenshot.png
