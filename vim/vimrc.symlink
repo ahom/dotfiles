@@ -3,6 +3,8 @@ syntax on
 " Wrap gitcommit file types at the appropriate length
 filetype indent plugin on
 
+let g:airline_powerline_fonts = 1
+
 call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'bling/vim-airline'
