@@ -135,5 +135,9 @@ install_dotfiles () {
 setup_gitconfig
 install_dotfiles
 
+sudo pacman -Sy i3 python2-pip zsh vim xterm scrot imagemagick xorg-server xorg-xinit xorg-server-utils xautolock chromium alsa-utils dmenu
+yaourt -Sy ttf-dejavu-sans-mono-powerline-git
+sudo pip2 install powerline-status
+
 echo ''
 echo '  All installed!'
