@@ -1,7 +1,7 @@
 call plug#begin()
 Plug 'tpope/vim-sensible'
-Plug 'w0ng/vim-hybrid'
 Plug 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plug 'chriskempson/base16-vim'
 call plug#end()
 
 syntax on
@@ -9,6 +9,6 @@ syntax on
 " Wrap gitcommit file types at the appropriate length
 filetype indent plugin on
 
-let g:hybrid_use_Xresources = 1
+let base16colorspace=256
 set background=dark
-colorscheme hybrid
+colorscheme base16-tomorrow
