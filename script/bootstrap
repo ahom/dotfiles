@@ -137,7 +137,7 @@ install_dotfiles
 
 sudo pacman -Sy i3 python2-pip zsh vim xterm scrot imagemagick xorg-server xorg-xinit xorg-server-utils xautolock chromium alsa-utils dmenu
 yaourt -Sy ttf-dejavu-sans-mono-powerline-git lemonbar-xft-git
-sudo pip2 install powerline-status
+sudo pip2 install powerline-status i3ipc
 
 echo ''
 echo '  All installed!'

@@ -6,8 +6,8 @@
 #
 
 # lock screen
-exec --no-startup-id xautolock -time 2 -locker ~/.dotfiles/script/lock &
-bindsym $mod+l exec --no-startup-id ~/.dotfiles/script/lock
+exec --no-startup-id xautolock -time 2 -locker ~/.dotfiles/wm/lock &
+bindsym $mod+l exec --no-startup-id ~/.dotfiles/wm/lock
 
 # i3 config file (v4)
 #
@@ -165,4 +165,4 @@ bindsym $mod+r mode "resize"
 #        tray_output primary
 #}
 
-exec --no-startup-id ~/.dotfiles/script/bar &
+exec --no-startup-id ~/.dotfiles/wm/bar &
