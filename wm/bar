@@ -1,3 +1,0 @@
-#! /bin/sh
-
-python2 /usr/lib/python2.7/site-packages/powerline/bindings/bar/powerline-bar.py --i3 | lemonbar -f 'DejaVu Sans Mono for Powerline:size=10' 

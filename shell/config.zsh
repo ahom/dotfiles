@@ -25,5 +25,4 @@ bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 bindkey "\e[3~" delete-char
 
-# Base16 Shell
-source $HOME/.dotfiles/theme/shell/base16-tomorrow.dark.sh
+export PATH=$DOTFILES/bin:$PATH
