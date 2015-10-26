@@ -12,3 +12,5 @@ cd $DOTFILES/wm/pkg
 
 makepkg -csf
 sudo pacman -U --noconfirm dwm-*pkg*
+
+rm -fr dwm*
