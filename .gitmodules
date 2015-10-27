@@ -1,6 +1,0 @@
-[submodule "theme/shell"]
-	path = theme/shell
-	url = https://github.com/chriskempson/base16-shell.git
-[submodule "theme/xresources"]
-	path = theme/xresources
-	url = https://github.com/chriskempson/base16-xresources.git
