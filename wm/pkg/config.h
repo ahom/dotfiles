@@ -1,20 +1,28 @@
 /* See LICENSE file for copyright and license details. */
 
+#define DEFAULT_FONT "Inconsolata for Powerline:size=10:dpi=96:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
+
 /* appearance */
 static const char *fonts[] = {
-	"monospace:size=10"
+	DEFAULT_FONT,
+	"Material Icons:size=10:dpi=96:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
 };
-static const char dmenufont[]       = "monospace:size=10";
-static const char normbordercolor[] = "#444444";
-static const char normbgcolor[]     = "#222222";
-static const char normfgcolor[]     = "#bbbbbb";
-static const char selbordercolor[]  = "#005577";
-static const char selbgcolor[]      = "#005577";
-static const char selfgcolor[]      = "#eeeeee";
+static const char dmenufont[]       = DEFAULT_FONT;
+static const char dmenunormbackground[]	= "#1d1f21";
+static const char dmenunormforeground[]	= "#c5c8c6";
+static const char dmenuselbackground[]	= "#c5c8c6";
+static const char dmenuselforeground[]	= "#1d1f21";
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = True;     /* False means bottom bar */
+
+static const char *colorschemes[][3] = {
+	/* 12 colorschemes at max */
+	/* border, background, foreground */
+	{ "#1d1f21", "#1d1f21", "#c5c8c6" },	/* normscheme */
+	{ "#c5c8c6", "#c5c8c6", "#1d1f21" },	/* selscheme */
+};
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -54,7 +62,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", dmenunormbackground, "-nf", dmenunormforeground, "-sb", dmenuselbackground, "-sf", dmenuselforeground, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 static Key keys[] = {

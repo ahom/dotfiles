@@ -15,6 +15,5 @@ set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusl
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
-let g:hybrid_use_Xresources = 1
 source $DOTFILES/editor/hybrid_e7.vim
 

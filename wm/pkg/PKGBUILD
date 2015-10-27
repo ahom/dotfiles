@@ -10,9 +10,11 @@ options=(zipman)
 depends=('libx11' 'libxinerama')
 makedepends=('git')
 source=('git://git.suckless.org/dwm'
-	'config.h')
+	'config.h'
+	'01-dwm-646b351-statuscolors.diff')
 md5sums=('SKIP'
-         'f011664240512f40aa98f76b7bf22b32')
+         '02429ff8b473bb0641e5519381e1c12d'
+         'a228ba9cafbedd229442e876bd486fb4')
 
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
@@ -24,7 +26,9 @@ pkgver (){
 
 prepare() {
 	cd ${srcdir}/${_pkgname}
-	cp ${srcdir}/config.h config.h
+	cp ${srcdir}/config.h .
+	cp ${srcdir}/01-dwm-646b351-statuscolors.diff .
+	patch -p1 < 01-dwm-646b351-statuscolors.diff
 	sed \
 		-e 's/CPPFLAGS =/CPPFLAGS +=/g' \
 		-e 's/CFLAGS   = -std/CFLAGS   += -std/g' \
