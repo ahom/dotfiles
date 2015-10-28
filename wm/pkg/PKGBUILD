@@ -1,4 +1,4 @@
-pkgname=dwm-git
+pkgname=dwm-ah-git
 _pkgname=dwm
 pkgver=20151020.646b351
 pkgrel=1
@@ -13,8 +13,8 @@ source=('git://git.suckless.org/dwm'
 	'config.h'
 	'01-dwm-646b351-statuscolors.diff')
 md5sums=('SKIP'
-         '02429ff8b473bb0641e5519381e1c12d'
-         'a228ba9cafbedd229442e876bd486fb4')
+         '88deb1b2d32a2380d7f36e471e535863'
+         'd1b0e1820b253849202db7ab6a337f1a')
 
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")

@@ -10,8 +10,8 @@ static const char *fonts[] = {
 static const char dmenufont[]       = DEFAULT_FONT;
 static const char dmenunormbackground[]	= "#1d1f21";
 static const char dmenunormforeground[]	= "#c5c8c6";
-static const char dmenuselbackground[]	= "#c5c8c6";
-static const char dmenuselforeground[]	= "#1d1f21";
+static const char dmenuselbackground[]	= "#b5bd68";
+static const char dmenuselforeground[]	= "#282a2e";
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const Bool showbar           = True;     /* False means no bar */
@@ -20,8 +20,16 @@ static const Bool topbar            = True;     /* False means bottom bar */
 static const char *colorschemes[][3] = {
 	/* 12 colorschemes at max */
 	/* border, background, foreground */
-	{ "#1d1f21", "#1d1f21", "#c5c8c6" },	/* normscheme */
-	{ "#c5c8c6", "#c5c8c6", "#1d1f21" },	/* selscheme */
+	{ "#373b41", "#1d1f21", "#373b41" },	/* normscheme */
+	{ "#b5bd68", "#1d1f21", "#c5c8c6" },	/* selscheme */
+
+	{ "#000000", "#b5bd68", "#282a2e" },	/* black to light green */
+	{ "#000000", "#1d1f21", "#b5bd68" },	/* light green to def */
+	{ "#000000", "#373b41", "#c5c8c6" },	/* gray50 */
+	{ "#000000", "#373b41", "#1d1f21" },	/* def to gray50 */
+	{ "#000000", "#1d1f21", "#373b41" },	/* gray50 to def */
+	{ "#000000", "#a54242", "#1d1f21" },	/* def to red */
+	{ "#000000", "#1d1f21", "#a54242" },	/* red to def */
 };
 
 /* tagging */
@@ -40,13 +48,13 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster      = 1;    /* number of clients in master area */
-static const Bool resizehints = True; /* True means respect size hints in tiled resizals */
+static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+	{ " \ue8f1 ",      tile },    /* first entry is default */
+	{ " \ue8eb ",      NULL },    /* no layout function means floating behavior */
+	{ " \ue30c ",      monocle },
 };
 
 /* key definitions */

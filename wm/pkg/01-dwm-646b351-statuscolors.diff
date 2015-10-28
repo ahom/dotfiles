@@ -45,11 +45,85 @@ index 3fde3cf..a7ef27a 100644
  static const char *termcmd[]  = { "st", NULL };
  
  static Key keys[] = {
+diff --git a/drw.c b/drw.c
+index f49200b..77405c0 100644
+--- a/drw.c
++++ b/drw.c
+@@ -219,10 +219,10 @@ drw_rect(Drw *drw, int x, int y, unsigned int w, unsigned int h, int filled, int
+ }
+ 
+ int
+-drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *text, int invert)
++drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *text, int invert, int lmargin, int rmargin)
+ {
+ 	char buf[1024];
+-	int tx, ty, th;
++	int tx, ty, th, tw;
+ 	Extnts tex;
+ 	XftDraw *d = NULL;
+ 	Fnt *curfont, *nextfont;
+@@ -250,6 +250,15 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+ 		                  DefaultColormap(drw->dpy, drw->screen));
+ 	}
+ 
++	tw = drw->fonts[0]->h / 2;
++	if (lmargin) {
++		x += tw;
++		w = (w < tw ? 0 : w - tw);
++	}
++	if (rmargin) {
++		w = (w < tw ? 0 : w - tw);
++	}
++
+ 	curfont = drw->fonts[0];
+ 	while (1) {
+ 		utf8strlen = 0;
+@@ -279,7 +288,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+ 		if (utf8strlen) {
+ 			drw_font_getexts(curfont, utf8str, utf8strlen, &tex);
+ 			/* shorten text if necessary */
+-			for (len = MIN(utf8strlen, (sizeof buf) - 1); len && (tex.w > w - drw->fonts[0]->h || w < drw->fonts[0]->h); len--)
++			for (len = MIN(utf8strlen, (sizeof buf) - 1); len && tex.w > w; len--)
+ 				drw_font_getexts(curfont, utf8str, len, &tex);
+ 
+ 			if (len) {
+@@ -291,7 +300,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+ 				if (render) {
+ 					th = curfont->ascent + curfont->descent;
+ 					ty = y + (h / 2) - (th / 2) + curfont->ascent;
+-					tx = x + (h / 2);
++					tx = x;
+ 					XftDrawStringUtf8(d, invert ? &drw->scheme->bg->rgb : &drw->scheme->fg->rgb, curfont->xfont, tx, ty, (XftChar8 *)buf, len);
+ 				}
+ 				x += tex.w;
+@@ -347,6 +356,9 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+ 	if (d)
+ 		XftDrawDestroy(d);
+ 
++	if (rmargin) {
++		x += tw;
++	}
+ 	return x;
+ }
+ 
+diff --git a/drw.h b/drw.h
+index e3b8515..c9ac2f8 100644
+--- a/drw.h
++++ b/drw.h
+@@ -68,7 +68,7 @@ void drw_setscheme(Drw *, ClrScheme *);
+ 
+ /* Drawing functions */
+ void drw_rect(Drw *, int, int, unsigned int, unsigned int, int, int, int);
+-int drw_text(Drw *, int, int, unsigned int, unsigned int, const char *, int);
++int drw_text(Drw *, int, int, unsigned int, unsigned int, const char *, int, int, int);
+ 
+ /* Map functions */
+ void drw_map(Drw *, Window, int, int, unsigned int, unsigned int);
 diff --git a/dwm.c b/dwm.c
-index 96b43f7..ef6e644 100644
+index 96b43f7..59e3e60 100644
 --- a/dwm.c
 +++ b/dwm.c
-@@ -51,6 +51,7 @@
+@@ -51,11 +51,15 @@
                                 * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
  #define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
  #define LENGTH(X)               (sizeof X / sizeof X[0])
@@ -57,15 +131,24 @@ index 96b43f7..ef6e644 100644
  #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
  #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
  #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
-@@ -206,6 +207,7 @@ static void setup(void);
- static void showhide(Client *c);
- static void sigchld(int unused);
- static void spawn(const Arg *arg);
-+static int stextwidth(void);
- static void tag(const Arg *arg);
- static void tagmon(const Arg *arg);
- static void tile(Monitor *);
-@@ -261,7 +263,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
+ #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
+-#define TEXTW(X)                (drw_text(drw, 0, 0, 0, 0, (X), 0) + drw->fonts[0]->h)
++#define TEXTWM(X, L, R)         (drw_text(drw, 0, 0, 0, 0, (X), 0, (L), (R)))
++#define TEXTW(X)                (TEXTWM((X), 1, 1))
++#define CTEXTW(X)               (drawcoloredtext(0, 0, 0, 0, (X), 0))
++
+ 
+ /* enums */
+ enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
+@@ -164,6 +168,7 @@ static void detachstack(Client *c);
+ static Monitor *dirtomon(int dir);
+ static void drawbar(Monitor *m);
+ static void drawbars(void);
++static int drawcoloredtext(int x, int y, unsigned int w, unsigned int h, char *text, int invert);
+ static void enternotify(XEvent *e);
+ static void expose(XEvent *e);
+ static void focus(Client *c);
+@@ -261,7 +266,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
  static Atom wmatom[WMLast], netatom[NetLast];
  static Bool running = True;
  static Cur *cursor[CurLast];
@@ -74,7 +157,7 @@ index 96b43f7..ef6e644 100644
  static Display *dpy;
  static Drw *drw;
  static Monitor *mons, *selmon;
-@@ -273,6 +275,9 @@ static Window root;
+@@ -273,6 +278,9 @@ static Window root;
  /* compile-time check if all tags fit into an unsigned int bit array. */
  struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
  
@@ -84,16 +167,16 @@ index 96b43f7..ef6e644 100644
  /* function implementations */
  void
  applyrules(Client *c) {
-@@ -432,7 +437,7 @@ buttonpress(XEvent *e) {
+@@ -432,7 +440,7 @@ buttonpress(XEvent *e) {
  		}
  		else if(ev->x < x + blw)
  			click = ClkLtSymbol;
 -		else if(ev->x > selmon->ww - TEXTW(stext))
-+		else if(ev->x > selmon->ww - stextwidth())
++		else if(ev->x > selmon->ww - CTEXTW(stext))
  			click = ClkStatusText;
  		else
  			click = ClkWinTitle;
-@@ -474,7 +479,7 @@ cleanup(void) {
+@@ -474,7 +482,7 @@ cleanup(void) {
  		cleanupmon(mons);
  	for(i = 0; i < CurLast; i++)
  		drw_cur_free(drw, cursor[i]);
@@ -102,54 +185,85 @@ index 96b43f7..ef6e644 100644
  		drw_clr_free(scheme[i].border);
  		drw_clr_free(scheme[i].bg);
  		drw_clr_free(scheme[i].fg);
-@@ -689,7 +694,8 @@ dirtomon(int dir) {
- 
- void
- drawbar(Monitor *m) {
--	int x, xx, w, dx;
-+	char *ptr, *buf, ch;
-+	int x, xx, w, ww, dx, s;
- 	unsigned int i, occ = 0, urg = 0;
- 	Client *c;
- 
-@@ -715,13 +721,32 @@ drawbar(Monitor *m) {
+@@ -704,24 +712,24 @@ drawbar(Monitor *m) {
+ 	for(i = 0; i < LENGTH(tags); i++) {
+ 		w = TEXTW(tags[i]);
+ 		drw_setscheme(drw, m->tagset[m->seltags] & 1 << i ? &scheme[SchemeSel] : &scheme[SchemeNorm]);
+-		drw_text(drw, x, 0, w, bh, tags[i], urg & 1 << i);
++		drw_text(drw, x, 0, w, bh, tags[i], urg & 1 << i, 1, 1);
+ 		drw_rect(drw, x + 1, 1, dx, dx, m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+ 		           occ & 1 << i, urg & 1 << i);
+ 		x += w;
+ 	}
+ 	w = blw = TEXTW(m->ltsymbol);
+ 	drw_setscheme(drw, &scheme[SchemeNorm]);
+-	drw_text(drw, x, 0, w, bh, m->ltsymbol, 0);
++	drw_text(drw, x, 0, w, bh, m->ltsymbol, 0, 1, 1);
  	x += w;
  	xx = x;
  	if(m == selmon) { /* status is only drawn on selected monitor */
 -		w = TEXTW(stext);
--		x = m->ww - w;
-+		ww = stextwidth();
-+		x = m->ww - ww;
++		w = CTEXTW(stext);
+ 		x = m->ww - w;
  		if(x < xx) {
  			x = xx;
--			w = m->ww - xx;
-+			ww = m->ww - xx;
-+		}
-+		s = 1;
-+		ptr = buf = stext;
-+		while (*ptr) {
-+			for (i = 0; *ptr < 0 || *ptr > LENGTH(colorschemes); ++i, ++ptr);
-+			ch = *ptr;
-+			*ptr = 0;
-+			w = TEXTW(buf);
-+			if (x + w > m->ww) {
-+				w = m->ww - x;
-+			}
-+			drw_setscheme(drw, &scheme[s - 1]);
-+			drw_text(drw, x, 0, w, bh, buf, 0);
-+			*ptr = ch;
-+			x += w;
-+			if (!*ptr || x >= m->ww)
-+				break;
-+			s = *ptr;
-+			buf = ++ptr;
+ 			w = m->ww - xx;
  		}
 -		drw_text(drw, x, 0, w, bh, stext, 0);
-+		x = m->ww - ww;
++		drawcoloredtext(x, 0, w, bh, stext, 0);
  	}
  	else
  		x = m->ww;
-@@ -1496,6 +1521,7 @@ setmfact(const Arg *arg) {
+@@ -729,7 +737,7 @@ drawbar(Monitor *m) {
+ 		x = xx;
+ 		if(m->sel) {
+ 			drw_setscheme(drw, m == selmon ? &scheme[SchemeSel] : &scheme[SchemeNorm]);
+-			drw_text(drw, x, 0, w, bh, m->sel->name, 0);
++			drw_text(drw, x, 0, w, bh, m->sel->name, 0, 1, 1);
+ 			drw_rect(drw, x + 1, 1, dx, dx, m->sel->isfixed, m->sel->isfloating, 0);
+ 		}
+ 		else {
+@@ -748,6 +756,39 @@ drawbars(void) {
+ 		drawbar(m);
+ }
+ 
++int
++drawcoloredtext(int x, int y, unsigned int w, unsigned int h, char *text, int invert) {
++	char *ptr = text, *buf = text, ch;
++	int xx = x, render;
++	unsigned int s = 1, ww, i;
++
++	if (!(render = x || y || w || h)) {
++		w = ~w;
++	}
++	while (*ptr) {
++		for (i = 0; (*ptr < 0) || (*ptr > LENGTH(colorschemes)); ++i, ++ptr);
++		if (i) {
++			ch = *ptr;
++			*ptr = 0;
++			ww = TEXTWM(buf, x == xx, ch == 0);
++			if (xx - x + ww > w) {
++				ww = w - xx + x;
++			}
++			if (render) {
++				drw_setscheme(drw, &scheme[s - 1]);
++				drw_text(drw, xx, 0, ww, h, buf, invert, x == xx, ch == 0);
++			}
++			*ptr = ch;
++			xx += ww;
++			if (!*ptr || ((xx - x) >= w))
++				break;
++		}
++		s = *ptr;
++		buf = ++ptr;
++	}
++	return xx - x;
++}
++
+ void
+ enternotify(XEvent *e) {
+ 	Client *c;
+@@ -1496,6 +1537,7 @@ setmfact(const Arg *arg) {
  
  void
  setup(void) {
@@ -157,7 +271,7 @@ index 96b43f7..ef6e644 100644
  	XSetWindowAttributes wa;
  
  	/* clean up any zombies immediately */
-@@ -1530,12 +1556,11 @@ setup(void) {
+@@ -1530,12 +1572,11 @@ setup(void) {
  	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
  	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
  	/* init appearance */
@@ -175,28 +289,3 @@ index 96b43f7..ef6e644 100644
  	/* init bars */
  	updatebars();
  	updatestatus();
-@@ -1591,6 +1616,24 @@ spawn(const Arg *arg) {
- 	}
- }
- 
-+int
-+stextwidth(void) {
-+	char *ptr = stext, *buf = stext, ch;
-+	int i, w = 0;
-+
-+	while(*ptr) {
-+		for(i = 0; *ptr < 0 || *ptr > LENGTH(colorschemes); ++i, ++ptr);
-+		ch = *ptr;
-+		*ptr = 0;
-+		w += TEXTW(buf);
-+		*ptr = ch;
-+		if (!*ptr)
-+			break;
-+		buf = ++ptr;
-+	}
-+	return w;
-+}
-+
- void
- tag(const Arg *arg) {
- 	if(selmon->sel && arg->ui & TAGMASK) {
