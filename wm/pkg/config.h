@@ -42,6 +42,19 @@ static const char *colors[] = {
         "#1d1f21",
         "#c5c8c6",
         "#c3ff00",
+
+	// green to red gradient
+	"#8c9440",
+	"#8e8b40",
+	"#918340",
+	"#937b40",
+	"#967340",
+	"#986b41",
+	"#9b6241",
+	"#9d5a41",
+	"#a05241",
+	"#a24a41",
+	"#a54242",
 };
 
 static const size_t normbordercolorid = 8;
