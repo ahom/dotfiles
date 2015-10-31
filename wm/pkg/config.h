@@ -7,30 +7,49 @@ static const char *fonts[] = {
 	DEFAULT_FONT,
 	"Material Icons:size=10:dpi=96:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
 };
-static const char dmenufont[]       = DEFAULT_FONT;
-static const char dmenunormbackground[]	= "#1d1f21";
-static const char dmenunormforeground[]	= "#c5c8c6";
-static const char dmenuselbackground[]	= "#b5bd68";
-static const char dmenuselforeground[]	= "#282a2e";
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
-static const Bool showbar           = True;     /* False means no bar */
-static const Bool topbar            = True;     /* False means bottom bar */
+static const char dmenufont[]       	= DEFAULT_FONT;
+static const char dmenunormbgcolor[]	= "#1d1f21";
+static const char dmenunormfgcolor[]	= "#c5c8c6";
+static const char dmenuselbgcolor[]	= "#b5bd68";
+static const char dmenuselfgcolor[]	= "#282a2e";
+static const unsigned int borderpx  	= 1;        /* border pixel of windows */
+static const unsigned int snap      	= 32;       /* snap pixel */
+static const Bool showbar           	= True;     /* False means no bar */
+static const Bool topbar            	= True;     /* False means bottom bar */
 
-static const char *colorschemes[][3] = {
-	/* 12 colorschemes at max */
-	/* border, background, foreground */
-	{ "#373b41", "#1d1f21", "#373b41" },	/* normscheme */
-	{ "#b5bd68", "#1d1f21", "#c5c8c6" },	/* selscheme */
+/* colors */
+static const char *colors[] = {
+        /* 8 normal colors */
+        "#282a2e", // "black",
+        "#a54242", // "red3",
+        "#8c9440", // "green3",
+        "#de935f", // "yellow3",
+        "#5f819d", // "blue2",
+        "#85678f", // "magenta3",
+        "#5e8d87", // "cyan3",
+        "#707880", // "gray90",
 
-	{ "#000000", "#b5bd68", "#282a2e" },	/* black to light green */
-	{ "#000000", "#1d1f21", "#b5bd68" },	/* light green to def */
-	{ "#000000", "#373b41", "#c5c8c6" },	/* gray50 */
-	{ "#000000", "#373b41", "#1d1f21" },	/* def to gray50 */
-	{ "#000000", "#1d1f21", "#373b41" },	/* gray50 to def */
-	{ "#000000", "#a54242", "#1d1f21" },	/* def to red */
-	{ "#000000", "#1d1f21", "#a54242" },	/* red to def */
+        /* 8 bright colors */
+        "#373b41", // "gray50",
+        "#cc6666", // "red",
+        "#b5bd68", // "green",
+        "#f0c674", // "yellow",
+        "#81a2be", // "#5c5cff",
+        "#b294bb", // "magenta",
+        "#8abeb7", // "cyan",
+        "#c5c8c6", // "white",
+
+        "#1d1f21",
+        "#c5c8c6",
+        "#c3ff00",
 };
+
+static const size_t normbordercolorid = 8;
+static const size_t normbgcolorid     = 16;
+static const size_t normfgcolorid     = 8;
+static const size_t selbordercolorid  = 10;
+static const size_t selbgcolorid      = 16;
+static const size_t selfgcolorid      = 15;
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -52,10 +71,12 @@ static const Bool resizehints = False; /* True means respect size hints in tiled
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ " \ue8f1 ",      tile },    /* first entry is default */
-	{ " \ue8eb ",      NULL },    /* no layout function means floating behavior */
-	{ " \ue30c ",      monocle },
+	{ " \033[38;5;16m\033[44m \033[38;5;15m\ue8f1 \033[34m\033[48;5;16m",      tile },    /* first entry is default \ue8f1 */
+	{ " \033[38;5;16m\033[43m \033[38;5;15m\ue8eb \033[33m\033[48;5;16m",      NULL },    /* no layout function means floating behavior */
+	{ " \033[38;5;16m\033[45m \033[38;5;15m\ue30c \033[35m\033[48;5;16m",      monocle },
 };
+
+static const char monocleformat[] = " \033[38;5;16m\033[45m \033[38;5;15m\ue30c %d \033[35m\033[48;5;16m";
 
 /* key definitions */
 #define MODKEY Mod1Mask
@@ -70,7 +91,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", dmenunormbackground, "-nf", dmenunormforeground, "-sb", dmenuselbackground, "-sf", dmenuselforeground, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", dmenunormbgcolor, "-nf", dmenunormfgcolor, "-sb", dmenuselbgcolor, "-sf", dmenuselfgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 static Key keys[] = {
