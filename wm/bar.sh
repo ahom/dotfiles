@@ -1,19 +1,68 @@
 #! /bin/sh
 
+__start_esc="\033["
+__end_esc="m"
+
+__fg() {
+	echo -e "${__start_esc}38;5;${1}${__end_esc}"
+}
+
+__bg() {
+	echo -e "${__start_esc}48;5;${1}${__end_esc}"
+}
+
+__fbg() {
+	echo -e "${__start_esc}38;5;${1}${__end_esc}${__start_esc}48;5;${2}${__end_esc}"
+}
+
+__print() {
+	local str=""
+	if [[ ! -z ${3} ]]; then
+		if [[ ! -z ${__currentbg} ]]; then
+			if [[ ${__currentbg} != ${2} ]]; then
+				str="${str}$(__fbg ${__currentbg} ${2}) "
+			else
+				str="${str}$(__fbg ${1} ${2}) "
+			fi
+		fi
+		__status_str="$(__fbg ${1} ${2}) ${3} ${str}${__status_str}"
+		__currentbg=${2}
+	fi
+}
+
+__end() {
+	__status_str="$(__fg ${__currentbg}) ${__status_str}"	
+}
+
+__grad() {
+	expr 19 + ${1}
+}
+
+__fggrad() {
+	__fg $(__grad ${1})
+}
+
+__bggrad() {
+	__bg $(__grad ${1})
+}
+
 __time() {
-	echo -e "$(date +'%H:%M')" 
+	__time_str="\ue8ae $(date +'%H:%M')" 
 }
 
 __date() {
-	echo -e "$(date +'%a %d %b')" 
+	__date_str="\ue878 $(date +'%a %d %b')" 
 }
 
 __cpu_format() {
-	awk '{
+	local val
+	local grad
+	read val grad <<<$(awk '{
 		val = ($1 - $2) * 100 / $1
-		col = 19 + int((val / 100) * 10)
-		printf("\033[38;5;%dm%5.2f", col, val)
-	}'<<<"${1} ${2}"
+		grad = int((val / 100) * 10)
+		print val, grad
+	}'<<<"${1} ${2}")
+	printf "$(__fggrad ${grad})%5.2f" "${val}"
 }
 
 __prev_cpu_idle=""
@@ -28,17 +77,20 @@ __cpu() {
 	if [[ ! -z ${__prev_idle} && ! -z ${__prev_total} ]]; then
 		idled=`expr ${idle} - ${__prev_idle}`
 		totald=`expr ${total} - ${__prev_total}`
-		__cpu_str="$(__cpu_format ${totald} ${idled})"
+		__cpu_str="\ue322 $(__cpu_format ${totald} ${idled})%"
 	fi
 	__prev_idle=${idle}
 	__prev_total=${total}
 }
 
 __network_format() {
-	awk '{
+	local val
+	local grad
+	local suffix
+	read val grad suffix <<<$(awk '{
 		val = $1 / $3
-		col = 19 + int(( $1 / ($2 + 1)) * 10)
-		suffix = " "
+		grad = int(( $1 / ($2 + 1)) * 10)
+		suffix = ""
 		if (val > 512) {
 			val = val / 1024
 			suffix = "K"
@@ -51,8 +103,9 @@ __network_format() {
 				}
 			}
 		}
-		printf("\033[38;5;%dm%5.1f %1sB/s", col, val, suffix)
-	}'<<<"${1} ${2} ${3}"
+		print val, grad, suffix
+	}'<<<"${1} ${2} ${3}")
+	printf "$(__fggrad ${grad})%5.1f %1sB/s" "${val}" "${suffix}"
 }
 
 typeset -A __prev_net_rcv
@@ -77,9 +130,9 @@ __network() {
 				__max_net_sndd[$name]=${sndd}
 			fi
 			if [[ ! -z ${__net_str} ]]; then
-				__net_str="${__net_str} \033[38;5;15m "
+				__net_str="${__net_str} $(__fg 15) "
 			fi
-			__net_str="${__net_str}\ue8d5 ${name} $(__network_format ${sndd} ${__max_net_sndd[$name]} ${1}) \033[38;5;15m/ $(__network_format ${rcvd} ${__max_net_rcvd[$name]} ${1})"
+			__net_str="${__net_str}\ue8d5 ${name} $(__network_format ${sndd} ${__max_net_sndd[$name]} ${1}) $(__fg 15)/ $(__network_format ${rcvd} ${__max_net_rcvd[$name]} ${1})"
 		fi
 		__prev_net_rcv[$name]=${rcv}
 		__prev_net_snd[$name]=${snd}
@@ -87,14 +140,45 @@ __network() {
 }
 
 __volume() {
-	echo "$(amixer sget Master | grep "%" | head -1 | awk -F"[][]" '{ print $2 }')"
+	local volume
+	local mute
+	read volume mute <<<"$(amixer sget Master | grep "%" | head -1 | awk -F"[][]" '{ print $2,$6 }')"
+	if [[ "${mute}" = "off" ]]; then
+		__volume_str="$(__fg 1)\ue04f$(__fg 15)"
+	else
+		__volume_str="\ue050"
+	fi
+	__volume_str="${__volume_str} ${volume}"
 }
 
-__interval=1
+__battery() {
+	local val="55%"
+	local grad=5
+	# __battery_str="$(__fg 2)\ue1a3" plugged
+	# __battery_str="\ue1a5" unplugged
+	#__battery_str="$(__fg 2)\ue1a3 $(__fggrad ${grad})${val} $(__bggrad ${grad})$(printf "%$(expr 10 - ${grad})s")$(__fg 0)$(__bg 0)$(printf "%${grad}s")$(__fg 8)$(__bg 8)" 
+}
+
+__interval=5
 while true; do
 	__cpu ${__interval}
 	__network ${__interval}
-	xsetroot -name "$(echo -e "\033[38;5;8m\033[48;5;8m\033[38;5;15m \ue050 $(__volume) \033[30m\033[40m\033[38;5;15m ${__net_str} \033[38;5;8m\033[48;5;8m\033[38;5;15m \ue322 ${__cpu_str}% \033[30m\033[38;5;15m\033[40m \ue878 $(__date) \033[38;5;10m\033[48;5;10m\033[30m \ue8ae $(__time)")"
+	__volume ${__interval}
+	__date ${__interval}
+	__time ${__interval}
+	__battery ${__interval}
+
+	__currentbg=""
+	__status_str=""
+	__print 0 10 "${__time_str}"
+	__print 15 0 "${__date_str}"
+	__print 15 8 "${__battery_str}"
+	__print 15 0 "${__volume_str}"
+	__print 15 8 "${__cpu_str}"
+	__print 15 0 "${__net_str}"
+	__end
+
+	xsetroot -name "$(echo -e "${__status_str}")"
 	sleep ${__interval}
 done
 

@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cd $DOTFILES/term/pkg
+cd ${DOTFILES}/term/pkg
 
 makepkg -csf
 sudo pacman -U --noconfirm st-*pkg*

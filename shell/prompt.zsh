@@ -32,46 +32,26 @@ __fbg() {
 }
 
 __print() {
-	if [[ ! -z ${6} ]]; then
+	local str=""
+	if [[ ! -z ${4} ]]; then
 		if [[ ! -z ${__currentbg} ]]; then
-			if [[ ${__currentbg} != ${5} ]]; then
-				printf "%s" "$(__fbg 0 ${__currentbg} ${5} ${1})"
+			if [[ ${__currentbg} != ${3} ]]; then
+				str="${str}$(__fbg 0 ${__currentbg} ${3} )"
 			else
-				printf "%s" "$(__fbg 0 ${4} ${5} ${2})"
+				str="${str}$(__fbg 0 ${2} ${3} )"
 			fi
 		fi
-		__currentbg=${5}
-		printf "%s" "$(__fbg ${3} ${4} ${5} " ${6} ")"
+		__prompt_str="${__prompt_str}${str}$(__fbg ${1} ${2} ${3} " ${4} ")"
+		__currentbg=${3}
 	fi
 }
 
 __end() {
-	printf "%s" "$(__fg 0 ${__currentbg} ${1})"	
-}
-
-__hsepr=""
-__ssepr=""
-__hsepl=""
-__ssepl=""
-
-__printr() {
-	__print ${__hsepr} ${__ssepr} ${1} ${2} ${3} ${4}
-}
-
-__printl() {
-	__print ${__hsepl} ${__ssepl} ${1} ${2} ${3} ${4}
-}
-
-__endr() {
-	__end ${__hsepr}
-}
-
-__endl() {
-	__end ${__hsepl}
+	__prompt_str="${__prompt_str}$(__fg 0 ${__currentbg} )"	
 }
 
 __hostname() {
-	printf "%s" " $(hostname)"
+	printf "%s" "$(hostname)"
 }
 
 __username() {
@@ -84,18 +64,18 @@ __cwd() {
 	local first_char
 	local part_count=0
 	local formatted_cwd=""
-	local dir_sep=" ${__ssepr} "
+	local dir_sep="  "
 	local tilde="~"
 
 	local cwd="${PWD/#$HOME/$tilde}"
 
-  	first_char=$cwd[1,1]
+  	first_char=${cwd[1,1]}
 
 	# remove leading tilde
   	cwd="${cwd#\~}"
 
-	while [[ "$cwd" == */* && "$cwd" != "/" ]]; do
-		[[ $part_count -eq $dir_limit ]] && first_char="$truncation" && break
+	while [[ "${cwd}" == */* && "${cwd}" != "/" ]]; do
+		[[ ${part_count} -eq ${dir_limit} ]] && first_char="${truncation}" && break
     		
 		# pop off last part of cwd
 		local part="${cwd##*/}"
@@ -106,7 +86,7 @@ __cwd() {
     		cwd="${cwd%/*}"
 
     		part_count=$((part_count+1))
-		formatted_cwd="$dir_sep$part$formatted_cwd"
+		formatted_cwd="${dir_sep}${part}${formatted_cwd}"
   	done
 	
 	if [[ ${part_count} -eq 0 ]]; then
@@ -187,14 +167,15 @@ __last_exit_code() {
 
 __prompt() {
 	local exit_code=$?
-	__printr 1 0 10 "$(__hostname)"
-	__printr 1 255 0 "$(__username)"
-	__printr 0 15 8 "$(__cwd)"
-	__printr 0 255 0 "$(__git_branch)"
-	__printr 0 0 10 "$(__git)"
-	__printr 0 255 1 "$(__last_exit_code $exit_code)"
-	__endr
-	printf "%s" "
+	__prompt_str=""
+	__print 0 0 10 "$(__hostname)"
+	__print 1 255 0 "$(__username)"
+	__print 0 15 8 "$(__cwd)"
+	__print 0 255 0 "$(__git_branch)"
+	__print 0 0 10 "$(__git)"
+	__print 0 255 1 "$(__last_exit_code $exit_code)"
+	__end
+	printf "%s" "${__prompt_str}
 $(__fg 1 4 \$) "
 }
 
