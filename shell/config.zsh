@@ -26,3 +26,4 @@ bindkey "^[[B" history-beginning-search-forward
 bindkey "\e[3~" delete-char
 
 export PATH=$DOTFILES/bin:$PATH
+export SDL_VIDEO_X11_DGAMOUSE=0
