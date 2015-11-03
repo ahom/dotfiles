@@ -1,1 +1,3 @@
 git/gitconfig.symlink
+editor/nvim.cfgsymlink/plugged
+editor/nvim.cfgsymlink/autoload

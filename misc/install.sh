@@ -1,3 +1,4 @@
 #! /bin/sh
 
-sudo pacman -Sy --noconfirm chromium alsa-utils
+sudo pacman -Sy --noconfirm alsa-utils
+yaourt --noconfirm google-chrome-stable
