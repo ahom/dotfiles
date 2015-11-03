@@ -168,7 +168,7 @@ __last_exit_code() {
 __prompt() {
 	local exit_code=$?
 	__prompt_str=""
-	__print 0 0 10 "$(__hostname)"
+	__print 0 255 5 "$(__hostname)"
 	__print 1 255 0 "$(__username)"
 	__print 0 15 8 "$(__cwd)"
 	__print 0 255 0 "$(__git_branch)"
