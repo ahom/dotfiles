@@ -7,15 +7,15 @@ static const char *fonts[] = {
 	DEFAULT_FONT,
 	"Material Icons:size=10:dpi=96:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
 };
-static const char dmenufont[]       	= DEFAULT_FONT;
-static const char dmenunormbgcolor[]	= "#1d1f21";
-static const char dmenunormfgcolor[]	= "#c5c8c6";
-static const char dmenuselbgcolor[]	= "#b5bd68";
-static const char dmenuselfgcolor[]	= "#282a2e";
-static const unsigned int borderpx  	= 1;        /* border pixel of windows */
-static const unsigned int snap      	= 32;       /* snap pixel */
-static const Bool showbar           	= True;     /* False means no bar */
-static const Bool topbar            	= True;     /* False means bottom bar */
+static const char dmenufont[]         = DEFAULT_FONT;
+static const char dmenunormbgcolor[] = "#1d1f21";
+static const char dmenunormfgcolor[] = "#c5c8c6";
+static const char dmenuselbgcolor[]  = "#b5bd68";
+static const char dmenuselfgcolor[]  = "#282a2e";
+static const unsigned int borderpx   = 1;        /* border pixel of windows */
+static const unsigned int snap       = 32;       /* snap pixel */
+static const int showbar             = 1;        /* 0 means no bar */
+static const int topbar              = 1;        /* 0 means bottom bar */
 
 /* colors */
 static const char *colors[] = {
@@ -80,7 +80,7 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster      = 1;    /* number of clients in master area */
-static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
+static const int resizehints  = 0;    /* 1 means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */

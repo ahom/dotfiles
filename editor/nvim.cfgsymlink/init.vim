@@ -1,6 +1,7 @@
 call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'bling/vim-airline'
+Plug 'godlygeek/tabular'
 call plug#end()
 
 syntax on

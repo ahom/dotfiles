@@ -1,50 +1,40 @@
-pkgname=dwm-ah-git
-_pkgname=dwm
-pkgver=20151020.646b351
+pkgname=dwm
+pkgver=6.1
 pkgrel=1
 pkgdesc="A dynamic window manager for X"
 url="http://dwm.suckless.org"
 arch=('i686' 'x86_64')
 license=('MIT')
 options=(zipman)
-depends=('libx11' 'libxinerama')
-makedepends=('git')
-source=('git://git.suckless.org/dwm'
-	'config.h'
-	'01-dwm-646b351-ansicolors.diff')
-md5sums=('SKIP'
-         'ac1d90f962d3bab2f99667cbece544fe'
-         'a69db20ee63158b1a75fa602811ee875')
-
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
-
-pkgver (){
-	cd ${_pkgname}
-	git log -1 --format='%cd.%h' --date=short | tr -d -
-}
+depends=('libx11' 'libxinerama' 'libxft' 'freetype2')
+source=(http://dl.suckless.org/dwm/dwm-${pkgver}.tar.gz
+        config.h
+        01-dwm-6.1-ansicolors.diff)
+md5sums=('f0b6b1093b7207f89c2a90b848c008ec'
+         '37010e810c204aa32fd18972be827d6d'
+         '5d34ed2751fe6bdc923c974be2cc889a')
 
 prepare() {
-	cd ${srcdir}/${_pkgname}
-	cp ${srcdir}/config.h .
-	cp ${srcdir}/01-dwm-646b351-ansicolors.diff .
-	patch -p1 < 01-dwm-646b351-ansicolors.diff
-	sed \
-		-e 's/CPPFLAGS =/CPPFLAGS +=/g' \
-		-e 's/CFLAGS   = -std/CFLAGS   += -std/g' \
-		-e 's/LDFLAGS =/LDFLAGS +=/g' \
-		-e 's/_BSD_SOURCE/_DEFAULT_SOURCE/' \
-		-i config.mk
-	sed '/@tic/d' -i Makefile
+    cd ${srcdir}/${pkgname}-${pkgver}
+    cp ${srcdir}/config.h .
+    cp ${srcdir}/01-dwm-6.1-ansicolors.diff .
+    patch -p1 < 01-dwm-6.1-ansicolors.diff
+    sed \
+        -e 's/CPPFLAGS =/CPPFLAGS +=/g' \
+        -e 's/CFLAGS   = -std/CFLAGS   += -std/g' \
+        -e 's/LDFLAGS =/LDFLAGS +=/g' \
+        -e 's/_BSD_SOURCE/_DEFAULT_SOURCE/' \
+        -i config.mk
+    sed '/@tic/d' -i Makefile
 }
 
 build() {
-	cd ${srcdir}/${_pkgname}
-	make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11 FREETYPEINC=/usr/include/freetype2
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}
-	make PREFIX=/usr DESTDIR=${pkgdir} install
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make PREFIX=/usr DESTDIR=${pkgdir} install
 }
 

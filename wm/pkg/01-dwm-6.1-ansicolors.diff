@@ -1,7 +1,6 @@
-diff --git a/config.def.h b/config.def.h
-index 3fde3cf..a67cc00 100644
---- a/config.def.h
-+++ b/config.def.h
+diff -up dwm-6.1/config.def.h dwm-6.1-patched/config.def.h
+--- dwm-6.1/config.def.h	2015-11-08 23:39:37.000000000 +0100
++++ dwm-6.1-patched/config.def.h	2015-11-09 21:48:45.100844589 +0100
 @@ -4,17 +4,31 @@
  static const char *fonts[] = {
  	"monospace:size=10"
@@ -15,17 +14,17 @@ index 3fde3cf..a67cc00 100644
 -static const char selfgcolor[]      = "#eeeeee";
 -static const unsigned int borderpx  = 1;        /* border pixel of windows */
 -static const unsigned int snap      = 32;       /* snap pixel */
--static const Bool showbar           = True;     /* False means no bar */
--static const Bool topbar            = True;     /* False means bottom bar */
-+static const char dmenufont[]		= "monospace:size=10";
-+static const char dmenunormbgcolor[]	= "#222222";
-+static const char dmenunormfgcolor[]	= "#bbbbbb";
-+static const char dmenuselbgcolor[]	= "#005577";
-+static const char dmenuselfgcolor[]	= "#eeeeee";
-+static const unsigned int borderpx  	= 1;        /* border pixel of windows */
-+static const unsigned int snap      	= 32;       /* snap pixel */
-+static const Bool showbar           	= True;     /* False means no bar */
-+static const Bool topbar            	= True;     /* False means bottom bar */
+-static const int showbar            = 1;        /* 0 means no bar */
+-static const int topbar             = 1;        /* 0 means bottom bar */
++static const char dmenufont[]        = "monospace:size=10";
++static const char dmenunormbgcolor[] = "#222222";
++static const char dmenunormfgcolor[] = "#bbbbbb";
++static const char dmenuselbgcolor[]  = "#005577";
++static const char dmenuselfgcolor[]  = "#eeeeee";
++static const unsigned int borderpx   = 1;        /* border pixel of windows */
++static const unsigned int snap       = 32;       /* snap pixel */
++static const int showbar             = 1;        /* 0 means no bar */
++static const int topbar              = 1;        /* 0 means bottom bar */
 +
 +/* colors */
 +static const char *colors[] = {
@@ -63,11 +62,10 @@ index 3fde3cf..a67cc00 100644
  static const char *termcmd[]  = { "st", NULL };
  
  static Key keys[] = {
-diff --git a/drw.c b/drw.c
-index f49200b..139127e 100644
---- a/drw.c
-+++ b/drw.c
-@@ -10,12 +10,58 @@
+diff -up dwm-6.1/drw.c dwm-6.1-patched/drw.c
+--- dwm-6.1/drw.c	2015-11-08 23:39:37.000000000 +0100
++++ dwm-6.1-patched/drw.c	2015-11-09 21:57:37.204193449 +0100
+@@ -10,6 +10,7 @@
  
  #define UTF_INVALID 0xFFFD
  #define UTF_SIZ     4
@@ -75,8 +73,9 @@ index f49200b..139127e 100644
  
  static const unsigned char utfbyte[UTF_SIZ + 1] = {0x80,    0, 0xC0, 0xE0, 0xF0};
  static const unsigned char utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
- static const long utfmin[UTF_SIZ + 1] = {       0,    0,  0x80,  0x800,  0x10000};
- static const long utfmax[UTF_SIZ + 1] = {0x10FFFF, 0x7F, 0x7FF, 0xFFFF, 0x10FFFF};
+@@ -60,6 +61,56 @@ utf8decode(const char *c, long *u, size_
+ 	return len;
+ }
  
 +static int
 +parseansiescape(Drw *drw, const char *text)
@@ -123,13 +122,6 @@ index f49200b..139127e 100644
 +	return 0;
 +}
 +
- static long
- utf8decodebyte(const char c, size_t *i)
- {
-@@ -60,6 +106,11 @@ utf8decode(const char *c, long *u, size_t clen)
- 	return len;
- }
- 
 +static int
 +verifycolors(Drw *drw) {
 +	return drw->bg < drw->colorcount && drw->fg < drw->colorcount;
@@ -147,7 +139,7 @@ index f49200b..139127e 100644
  	XFreePixmap(drw->dpy, drw->drawable);
  	XFreeGC(drw->dpy, drw->gc);
  	free(drw);
-@@ -201,28 +254,25 @@ drw_clr_free(Clr *clr)
+@@ -201,17 +254,11 @@ drw_clr_free(Clr *clr)
  }
  
  void
@@ -167,12 +159,7 @@ index f49200b..139127e 100644
  	if (filled)
  		XFillRectangle(drw->dpy, drw->drawable, drw->gc, x, y, w + 1, h + 1);
  	else if (empty)
- 		XDrawRectangle(drw->dpy, drw->drawable, drw->gc, x, y, w, h);
- }
- 
-+
- int
- drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *text, int invert)
+@@ -223,6 +270,8 @@ drw_text(Drw *drw, int x, int y, unsigne
  {
  	char buf[1024];
  	int tx, ty, th;
@@ -181,7 +168,7 @@ index f49200b..139127e 100644
  	Extnts tex;
  	XftDraw *d = NULL;
  	Fnt *curfont, *nextfont;
-@@ -236,26 +286,36 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+@@ -236,26 +285,36 @@ drw_text(Drw *drw, int x, int y, unsigne
  	XftResult result;
  	int charexists = 0;
  
@@ -223,7 +210,7 @@ index f49200b..139127e 100644
  			utf8charlen = utf8decode(text, &utf8codepoint, UTF_SIZ);
  			for (i = 0; i < drw->fontcount; i++) {
  				charexists = charexists || XftCharExists(drw->dpy, drw->fonts[i]->xfont, utf8codepoint);
-@@ -277,22 +337,33 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+@@ -277,22 +336,33 @@ drw_text(Drw *drw, int x, int y, unsigne
  		}
  
  		if (utf8strlen) {
@@ -261,7 +248,7 @@ index f49200b..139127e 100644
  				}
  				x += tex.w;
  				w -= tex.w;
-@@ -304,6 +375,8 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+@@ -304,6 +374,8 @@ drw_text(Drw *drw, int x, int y, unsigne
  		} else if (nextfont) {
  			charexists = 0;
  			curfont = nextfont;
@@ -270,7 +257,7 @@ index f49200b..139127e 100644
  		} else {
  			/* Regardless of whether or not a fallback font is found, the
  			 * character must be drawn.
-@@ -344,8 +417,13 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, const char *tex
+@@ -344,8 +416,13 @@ drw_text(Drw *drw, int x, int y, unsigne
  			}
  		}
  	}
@@ -285,7 +272,7 @@ index f49200b..139127e 100644
  
  	return x;
  }
-@@ -396,3 +474,17 @@ drw_cur_free(Drw *drw, Cur *cursor)
+@@ -396,3 +473,17 @@ drw_cur_free(Drw *drw, Cur *cursor)
  	XFreeCursor(drw->dpy, cursor->cursor);
  	free(cursor);
  }
@@ -303,10 +290,9 @@ index f49200b..139127e 100644
 +		drw->fg = fg;
 +	}
 +}
-diff --git a/drw.h b/drw.h
-index e3b8515..d4b19e3 100644
---- a/drw.h
-+++ b/drw.h
+diff -up dwm-6.1/drw.h dwm-6.1-patched/drw.h
+--- dwm-6.1/drw.h	2015-11-08 23:39:37.000000000 +0100
++++ dwm-6.1-patched/drw.h	2015-11-09 21:59:04.037529316 +0100
 @@ -1,5 +1,6 @@
  /* See LICENSE file for copyright and license details. */
  #define DRW_FONT_CACHE_SIZE 32
@@ -349,10 +335,9 @@ index e3b8515..d4b19e3 100644
  
  /* Drawing functions */
  void drw_rect(Drw *, int, int, unsigned int, unsigned int, int, int, int);
-diff --git a/dwm.c b/dwm.c
-index 96b43f7..59ff20f 100644
---- a/dwm.c
-+++ b/dwm.c
+diff -up dwm-6.1/dwm.c dwm-6.1-patched/dwm.c
+--- dwm-6.1/dwm.c	2015-11-08 23:39:37.000000000 +0100
++++ dwm-6.1-patched/dwm.c	2015-11-09 22:04:35.540872323 +0100
 @@ -59,7 +59,6 @@
  
  /* enums */
@@ -370,18 +355,9 @@ index 96b43f7..59ff20f 100644
  	float mfact;
  	int nmaster;
  	int num;
-@@ -236,7 +235,7 @@ static void zoom(const Arg *arg);
- 
- /* variables */
- static const char broken[] = "broken";
--static char stext[256];
-+static char stext[4096];
- static int screen;
- static int sw, sh;           /* X display screen geometry width, height */
- static int bh, blw = 0;      /* bar geometry */
-@@ -261,7 +260,6 @@ static void (*handler[LASTEvent]) (XEvent *) = {
+@@ -261,7 +260,6 @@ static void (*handler[LASTEvent]) (XEven
  static Atom wmatom[WMLast], netatom[NetLast];
- static Bool running = True;
+ static int running = 1;
  static Cur *cursor[CurLast];
 -static ClrScheme scheme[SchemeLast];
  static Display *dpy;
@@ -396,12 +372,12 @@ index 96b43f7..59ff20f 100644
 +
  /* function implementations */
  void
- applyrules(Client *c) {
-@@ -474,11 +475,6 @@ cleanup(void) {
+ applyrules(Client *c)
+@@ -481,11 +482,6 @@ cleanup(void)
  		cleanupmon(mons);
- 	for(i = 0; i < CurLast; i++)
+ 	for (i = 0; i < CurLast; i++)
  		drw_cur_free(drw, cursor[i]);
--	for(i = 0; i < SchemeLast; i++) {
+-	for (i = 0; i < SchemeLast; i++) {
 -		drw_clr_free(scheme[i].border);
 -		drw_clr_free(scheme[i].bg);
 -		drw_clr_free(scheme[i].fg);
@@ -409,18 +385,18 @@ index 96b43f7..59ff20f 100644
  	drw_free(drw);
  	XSync(dpy, False);
  	XSetInputFocus(dpy, PointerRoot, RevertToPointerRoot, CurrentTime);
-@@ -689,7 +685,7 @@ dirtomon(int dir) {
- 
+@@ -704,7 +700,7 @@ dirtomon(int dir)
  void
- drawbar(Monitor *m) {
+ drawbar(Monitor *m)
+ {
 -	int x, xx, w, dx;
 +	int x, xx, w, dx, issel;
  	unsigned int i, occ = 0, urg = 0;
  	Client *c;
  
-@@ -703,14 +699,17 @@ drawbar(Monitor *m) {
+@@ -718,14 +714,17 @@ drawbar(Monitor *m)
  	x = 0;
- 	for(i = 0; i < LENGTH(tags); i++) {
+ 	for (i = 0; i < LENGTH(tags); i++) {
  		w = TEXTW(tags[i]);
 -		drw_setscheme(drw, m->tagset[m->seltags] & 1 << i ? &scheme[SchemeSel] : &scheme[SchemeNorm]);
 +		issel = m->tagset[m->seltags] & 1 << i;
@@ -438,43 +414,41 @@ index 96b43f7..59ff20f 100644
  	drw_text(drw, x, 0, w, bh, m->ltsymbol, 0);
  	x += w;
  	xx = x;
-@@ -721,6 +720,8 @@ drawbar(Monitor *m) {
+@@ -736,17 +735,22 @@ drawbar(Monitor *m)
  			x = xx;
  			w = m->ww - xx;
  		}
 +		drw_setbg(drw, normbgcolorid);
 +		drw_setfg(drw, normfgcolorid);
  		drw_text(drw, x, 0, w, bh, stext, 0);
- 	}
- 	else
-@@ -728,12 +729,15 @@ drawbar(Monitor *m) {
- 	if((w = x - xx) > bh) {
+ 	} else
+ 		x = m->ww;
+ 	if ((w = x - xx) > bh) {
  		x = xx;
- 		if(m->sel) {
+ 		if (m->sel) {
 -			drw_setscheme(drw, m == selmon ? &scheme[SchemeSel] : &scheme[SchemeNorm]);
 +			issel = m == selmon;
 +			drw_setbg(drw, issel ? selbgcolorid : normbgcolorid);
 +			drw_setfg(drw, issel ? selfgcolorid : normfgcolorid);
  			drw_text(drw, x, 0, w, bh, m->sel->name, 0);
  			drw_rect(drw, x + 1, 1, dx, dx, m->sel->isfixed, m->sel->isfloating, 0);
- 		}
- 		else {
+ 		} else {
 -			drw_setscheme(drw, &scheme[SchemeNorm]);
 +			drw_setbg(drw, normbgcolorid);
 +			drw_setfg(drw, normfgcolorid);
  			drw_rect(drw, x, 0, w, bh, 1, 0, 1);
  		}
  	}
-@@ -791,7 +795,7 @@ focus(Client *c) {
+@@ -807,7 +811,7 @@ focus(Client *c)
  		detachstack(c);
  		attachstack(c);
- 		grabbuttons(c, True);
+ 		grabbuttons(c, 1);
 -		XSetWindowBorder(dpy, c->win, scheme[SchemeSel].border->pix);
 +		XSetWindowBorder(dpy, c->win, drw->colors[selbordercolorid]->pix);
  		setfocus(c);
- 	}
- 	else {
-@@ -1038,7 +1042,7 @@ manage(Window w, XWindowAttributes *wa) {
+ 	} else {
+ 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
+@@ -1065,7 +1069,7 @@ manage(Window w, XWindowAttributes *wa)
  
  	wc.border_width = c->bw;
  	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
@@ -483,24 +457,24 @@ index 96b43f7..59ff20f 100644
  	configure(c); /* propagates border_width, if size doesn't change */
  	updatewindowtype(c);
  	updatesizehints(c);
-@@ -1094,7 +1098,7 @@ monocle(Monitor *m) {
- 		if(ISVISIBLE(c))
+@@ -1124,7 +1128,7 @@ monocle(Monitor *m)
+ 		if (ISVISIBLE(c))
  			n++;
- 	if(n > 0) /* override layout symbol */
+ 	if (n > 0) /* override layout symbol */
 -		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
 +		snprintf(m->ltsymbol, sizeof m->ltsymbol, monocleformat, n);
- 	for(c = nexttiled(m->clients); c; c = nexttiled(c->next))
- 		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, False);
+ 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
+ 		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
  }
-@@ -1496,6 +1500,7 @@ setmfact(const Arg *arg) {
- 
+@@ -1546,6 +1550,7 @@ setmfact(const Arg *arg)
  void
- setup(void) {
+ setup(void)
+ {
 +	int i;
  	XSetWindowAttributes wa;
  
  	/* clean up any zombies immediately */
-@@ -1530,12 +1535,10 @@ setup(void) {
+@@ -1580,12 +1585,10 @@ setup(void)
  	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
  	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
  	/* init appearance */
@@ -517,12 +491,12 @@ index 96b43f7..59ff20f 100644
  	/* init bars */
  	updatebars();
  	updatestatus();
-@@ -1684,7 +1687,7 @@ unfocus(Client *c, Bool setfocus) {
- 	if(!c)
+@@ -1745,7 +1748,7 @@ unfocus(Client *c, int setfocus)
+ 	if (!c)
  		return;
- 	grabbuttons(c, False);
+ 	grabbuttons(c, 0);
 -	XSetWindowBorder(dpy, c->win, scheme[SchemeNorm].border->pix);
 +	XSetWindowBorder(dpy, c->win, drw->colors[normbordercolorid]->pix);
- 	if(setfocus) {
+ 	if (setfocus) {
  		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
  		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
