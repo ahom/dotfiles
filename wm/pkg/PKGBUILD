@@ -12,7 +12,7 @@ source=(http://dl.suckless.org/dwm/dwm-${pkgver}.tar.gz
         01-dwm-6.1-ansicolors.diff)
 md5sums=('f0b6b1093b7207f89c2a90b848c008ec'
          '37010e810c204aa32fd18972be827d6d'
-         '5d34ed2751fe6bdc923c974be2cc889a')
+         '0caa29a29bdec3581a744aa01a5c18d7')
 
 prepare() {
     cd ${srcdir}/${pkgname}-${pkgver}

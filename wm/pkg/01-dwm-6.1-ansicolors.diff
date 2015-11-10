@@ -337,7 +337,7 @@ diff -up dwm-6.1/drw.h dwm-6.1-patched/drw.h
  void drw_rect(Drw *, int, int, unsigned int, unsigned int, int, int, int);
 diff -up dwm-6.1/dwm.c dwm-6.1-patched/dwm.c
 --- dwm-6.1/dwm.c	2015-11-08 23:39:37.000000000 +0100
-+++ dwm-6.1-patched/dwm.c	2015-11-09 22:04:35.540872323 +0100
++++ dwm-6.1-patched/dwm.c	2015-11-10 07:52:40.969696304 +0100
 @@ -59,7 +59,6 @@
  
  /* enums */
@@ -355,6 +355,15 @@ diff -up dwm-6.1/dwm.c dwm-6.1-patched/dwm.c
  	float mfact;
  	int nmaster;
  	int num;
+@@ -236,7 +235,7 @@ static void zoom(const Arg *arg);
+ 
+ /* variables */
+ static const char broken[] = "broken";
+-static char stext[256];
++static char stext[4096];
+ static int screen;
+ static int sw, sh;           /* X display screen geometry width, height */
+ static int bh, blw = 0;      /* bar geometry */
 @@ -261,7 +260,6 @@ static void (*handler[LASTEvent]) (XEven
  static Atom wmatom[WMLast], netatom[NetLast];
  static int running = 1;
