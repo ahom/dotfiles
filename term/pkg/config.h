@@ -5,20 +5,11 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char font[] = "Inconsolata for Powerline:size=10:dpi=96:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull";
+static char font[] = "Inconsolata for Powerline:size=12:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull";
 static int borderpx = 2;
-
-/*
- * What program is execed by st depends of these precedence rules:
- * 1: program passed with -e
- * 2: utmp option
- * 3: SHELL environment variable
- * 4: value of shell in /etc/passwd
- * 5: value of shell in config.h
- */
 static char shell[] = "/bin/sh";
 static char *utmp = NULL;
-static char stty_args[] = "stty raw pass8 nl -echo -iexten -cstopb 38400";
+static char stty_args[] = "stty raw -echo -iexten echonl";
 
 /* identification sequence returned in DA and DECID */
 static char vtiden[] = "\033[?6c";
@@ -39,7 +30,7 @@ static unsigned int doubleclicktimeout = 300;
 static unsigned int tripleclicktimeout = 600;
 
 /* alt screens */
-static int allowaltscreen = 1;
+static bool allowaltscreen = true;
 
 /* frames per second st should at maximum draw to the screen */
 static unsigned int xfps = 120;
@@ -62,7 +53,7 @@ static unsigned int cursorthickness = 2;
  */
 static int bellvolume = 0;
 
-/* default TERM value */
+/* TERM value */
 static char termname[] = "st-256color";
 
 static unsigned int tabspaces = 8;
@@ -100,29 +91,12 @@ static const char *colorname[] = {
 
 /*
  * Default colors (colorname index)
- * foreground, background, cursor, reverse cursor
+ * foreground, background, cursor
  */
 
 static unsigned int defaultfg = 257;
 static unsigned int defaultbg = 256;
 static unsigned int defaultcs = 258;
-static unsigned int defaultrcs = 258;
-
-/*
- * Default shape of cursor
- * 2: Block ("█")
- * 4: Underline ("_")
- * 6: Bar ("|")
- * 7: Snowman ("☃")
- */
-static unsigned int cursorshape = 2;
-
-/*
- * Default colour and shape of the mouse cursor
- */
-static unsigned int mouseshape = XC_xterm;
-static unsigned int mousefg = 7;
-static unsigned int mousebg = 0;
 
 /*
  * Colors used, when the specific fg == defaultfg. So in reverse mode this
@@ -147,7 +121,6 @@ static Mousekey mshortcuts[] = {
 
 static Shortcut shortcuts[] = {
 	/* mask                 keysym          function        argument */
-	{ XK_ANY_MOD,           XK_Break,       sendbreak,      {.i =  0} },
 	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },

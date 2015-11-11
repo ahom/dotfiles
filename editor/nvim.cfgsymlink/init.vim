@@ -1,5 +1,4 @@
 call plug#begin()
-Plug 'tpope/vim-sensible'
 Plug 'bling/vim-airline'
 Plug 'godlygeek/tabular'
 call plug#end()
@@ -18,6 +17,11 @@ set list
 set laststatus=2 " Always display the statusline in all windows
 set showtabline=2 " Always display the tabline, even if there is only one tab
 set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+
+" Workaround for nvim until this is fixed
+" https://github.com/neovim/neovim/issues/3211  
+map <F1> <Del>
+imap <F1> <Del>
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1

@@ -23,8 +23,14 @@ setopt HIST_REDUCE_BLANKS
 
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
-bindkey "\e[3~" delete-char
+bindkey "^[[3~" delete-char
+bindkey "^?" backward-delete-char
 
 export XDG_CONFIG_HOME=$HOME/.config
 export PATH=$DOTFILES/bin:$PATH
 export SDL_VIDEO_X11_DGAMOUSE=0
+
+function zle-line-init () { echoti smkx }
+function zle-line-finish () { echoti rmkx }
+zle -N zle-line-init
+zle -N zle-line-finish
