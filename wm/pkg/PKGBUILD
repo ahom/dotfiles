@@ -1,4 +1,4 @@
-pkgname=dwm
+pkgname=dwm-custom-ah
 pkgver=6.1
 pkgrel=1
 pkgdesc="A dynamic window manager for X"
@@ -15,7 +15,7 @@ md5sums=('f0b6b1093b7207f89c2a90b848c008ec'
          '0caa29a29bdec3581a744aa01a5c18d7')
 
 prepare() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd ${srcdir}/dwm-${pkgver}
     cp ${srcdir}/config.h .
     cp ${srcdir}/01-dwm-6.1-ansicolors.diff .
     patch -p1 < 01-dwm-6.1-ansicolors.diff
@@ -29,12 +29,12 @@ prepare() {
 }
 
 build() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd ${srcdir}/dwm-${pkgver}
     make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11 FREETYPEINC=/usr/include/freetype2
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd ${srcdir}/dwm-${pkgver}
     make PREFIX=/usr DESTDIR=${pkgdir} install
 }
 

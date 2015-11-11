@@ -1,4 +1,4 @@
-pkgname=st
+pkgname=st-custom-ah
 pkgver=0.6
 pkgrel=1
 pkgdesc='Simple virtual terminal emulator for X'
@@ -12,7 +12,7 @@ md5sums=('1a926f450b4eacb7e2f5ac5b8ffea7c8'
          '2ae89e1b5d3541bd9b383041e81f1fbf')
 
 prepare() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd ${srcdir}/st-${pkgver}
     cp ${srcdir}/config.h config.h
     sed \
         -e 's/CPPFLAGS =/CPPFLAGS +=/g' \
@@ -24,12 +24,12 @@ prepare() {
 }
 
 build() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd ${srcdir}/st-${pkgver}
     make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd ${srcdir}/st-${pkgver}
     make PREFIX=/usr DESTDIR="${pkgdir}" install
 }
 
