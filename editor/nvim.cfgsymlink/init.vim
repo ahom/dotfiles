@@ -7,6 +7,7 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 Plug 'euclio/vim-markdown-composer', { 'do': 'cargo build --release' }
 Plug 'Valloric/YouCompleteMe', { 'do': '/usr/bin/python2 install.py --clang-completer --gocode-completer'  }
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 call plug#end()
 
 syntax on
