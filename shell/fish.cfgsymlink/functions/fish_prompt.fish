@@ -1,3 +1,5 @@
+#! /usr/bin/fish
+
 set color00 282a2e  # Black
 set color01 a54242  # Red
 set color02 8c9440  # Green
