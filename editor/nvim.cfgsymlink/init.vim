@@ -8,6 +8,7 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'euclio/vim-markdown-composer', { 'do': 'cargo build --release' }
 Plug 'Valloric/YouCompleteMe', { 'do': '/usr/bin/python2 install.py --clang-completer --gocode-completer'  }
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+Plug 'leafgarland/typescript-vim'
 call plug#end()
 
 syntax on
@@ -24,9 +25,6 @@ set list
 set laststatus=2 " Always display the statusline in all windows
 set showtabline=2 " Always display the tabline, even if there is only one tab
 set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
-
-set omnifunc=syntaxcomplete#Complete
-autocmd FileType typescript setlocal completeopt+=menu,preview
 
 " Workaround for nvim until this is fixed
 " https://github.com/neovim/neovim/issues/3211  
