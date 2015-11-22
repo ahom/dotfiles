@@ -1,3 +1,7 @@
 git/gitconfig.symlink
 editor/nvim.cfgsymlink/plugged
 editor/nvim.cfgsymlink/autoload
+editor/nvim.cfgsymlink/.netrwhist
+editor/nvim.cfgsymlink/.init.vim*
+shell/fish.cfgsymlink/fish_history
+shell/fish.cfgsymlink/fishd.home
