@@ -1,4 +1,4 @@
-feh --bg-scale -. "${HOME}/.wallpapers"&
+feh --bg-scale -. "$HOME/.wallpapers"&
 xautolock -time 10 -locker slock&
-${DOTFILES}/wm/bar.sh&
+/bin/sh $HOME/.dotfiles/wm/bar.sh&
 exec dwm
