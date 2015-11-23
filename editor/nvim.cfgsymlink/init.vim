@@ -34,3 +34,5 @@ imap <F1> <Del>
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='powerlineish'
+
+let g:markdown_composer_browser='google-chrome-stable'
