@@ -21,6 +21,8 @@ set expandtab
 
 set listchars=tab:>-
 set list
+set cursorline
+hi CursorLine term=bold cterm=bold
 
 set laststatus=2 " Always display the statusline in all windows
 set showtabline=2 " Always display the tabline, even if there is only one tab
