@@ -1,6 +1,6 @@
 #! /bin/sh
 
-sudo pacman -Sy --noconfirm neovim python2
+sudo pacman -Sy --noconfirm neovim python2 xsel
 sudo pip2 install neovim
 sudo pip install neovim
 
