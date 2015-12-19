@@ -1,8 +1,4 @@
 #! /bin/sh
 
-cd ${DOTFILES}/term/pkg
+sudo pacman --noconfirm xterm 
 
-makepkg -csf
-sudo pacman -U --noconfirm st-*pkg*
-
-rm -fr st*

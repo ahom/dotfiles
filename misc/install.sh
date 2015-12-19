@@ -1,5 +1,5 @@
 #! /bin/sh
 
 sudo pacman -Sy --noconfirm alsa-utils cargo rust nodejs npm clang base-devel cmake go 
-yaourt --noconfirm google-chrome-stable powerline-fonts-git ttf-materials-icons
+yaourt --noconfirm -Sy google-chrome powerline-fonts-git ttf-material-icons
 sudo npm -g install typescript
