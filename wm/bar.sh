@@ -158,11 +158,21 @@ __volume() {
 
 __battery_str=""
 __battery() {
-    local val="55%"
-    local grad=5
-    # __battery_str="$(__fg 2)\ue1a3" plugged
-    # __battery_str="\ue1a5" unplugged
-    #__battery_str="$(__fg 2)\ue1a3 $(__fggrad ${grad})${val} $(__bggrad ${grad})$(printf "%$(expr 10 - ${grad})s")$(__fg 0)$(__bg 0)$(printf "%${grad}s")$(__fg 8)$(__bg 8)" 
+    if [[ "$(cat /sys/class/power_supply/BAT0/type)" = "Battery" ]]; then
+        local val
+        local grad
+        read val grad <<<$(awk '{
+            val = int(($1 / $2) * 100)
+            grad = 10 - int(val / 10)
+            print val, grad
+        }'<<<"$(cat /sys/class/power_supply/BAT0/charge_now) $(cat /sys/class/power_supply/BAT0/charge_full_design)")
+        if [[ "$(cat /sys/class/power_supply/BAT0/status)" = "Discharging" ]]; then
+            __battery_str="\ue1a5"
+        else
+            __battery_str="$(__fg 2)\ue1a3" 
+        fi
+        __battery_str="$(__fg 2)\ue1a3 $(__fggrad ${grad})${val}% $(__bggrad ${grad})$(printf "%$(expr 10 - ${grad})s")$(__fg 0)$(__bg 0)$(printf "%${grad}s")$(__fg 8)$(__bg 8)" 
+    fi
 }
 
 __interval=5

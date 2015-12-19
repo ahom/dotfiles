@@ -1,6 +1,6 @@
 #! /bin/sh
 
-sudo pacman -Sy xorg-server xorg-xinit xorg-server-utils xautolock dmenu slock feh
+sudo pacman -Sy xorg-server xorg-xinit xorg-server-utils xautolock dmenu slock feh wget
 
 WP_DIR=${HOME}/.wallpapers
 mkdir ${WP_DIR}

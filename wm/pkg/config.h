@@ -105,7 +105,7 @@ static const char monocleformat[] = " \033[38;5;16m\033[45m \033[38;5;15m\ue3
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", dmenunormbgcolor, "-nf", dmenunormfgcolor, "-sb", dmenuselbgcolor, "-sf", dmenuselfgcolor, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "xterm", NULL };
 static const char *lockcmd[]  = { "slock", NULL }; 
 
 static Key keys[] = {

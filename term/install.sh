@@ -1,4 +1,4 @@
 #! /bin/sh
 
-sudo pacman --noconfirm xterm 
+sudo pacman --noconfirm -Sy xterm 
 

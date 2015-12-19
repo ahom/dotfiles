@@ -31,11 +31,6 @@ set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusl
 
 set clipboard+=unnamedplus
 
-" Workaround for nvim until this is fixed
-" https://github.com/neovim/neovim/issues/3211  
-map <F1> <Del>
-imap <F1> <Del>
-
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='powerlineish'
