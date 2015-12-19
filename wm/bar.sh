@@ -171,7 +171,7 @@ __battery() {
         else
             __battery_str="$(__fg 2)\ue1a3" 
         fi
-        __battery_str="$(__fg 2)\ue1a3 $(__fggrad ${grad})${val}% $(__bggrad ${grad})$(printf "%$(expr 10 - ${grad})s")$(__fg 0)$(__bg 0)$(printf "%${grad}s")$(__fg 8)$(__bg 8)" 
+        __battery_str="${__battery_str} $(__fggrad ${grad})${val}% $(__bggrad ${grad})$(printf "%$(expr 10 - ${grad})s")$(__fg 0)$(__bg 0)$(printf "%${grad}s")$(__fg 8)$(__bg 8)" 
     fi
 }
 
