@@ -124,22 +124,24 @@ __network() {
     local sndd
     __net_str=""
     while read name rcv snd; do
-        if [[ ! -z ${__prev_net_rcv[$name]} && ! -z ${__prev_net_snd[$name]} ]]; then
-            rcvd=`expr ${rcv} - ${__prev_net_rcv[$name]}`
-            sndd=`expr ${snd} - ${__prev_net_snd[$name]}`
-            if [[ -z ${__max_net_rcvd[$name]} || ${rcvd} -gt ${__max_net_rcvd[$name]} ]]; then
-                __max_net_rcvd[$name]=${rcvd}
+        if [[ "$name" != "" ]]; then
+            if [[ ! -z ${__prev_net_rcv[$name]} && ! -z ${__prev_net_snd[$name]} ]]; then
+                rcvd=`expr ${rcv} - ${__prev_net_rcv[$name]}`
+                sndd=`expr ${snd} - ${__prev_net_snd[$name]}`
+                if [[ -z ${__max_net_rcvd[$name]} || ${rcvd} -gt ${__max_net_rcvd[$name]} ]]; then
+                    __max_net_rcvd[$name]=${rcvd}
+                fi
+                if [[ -z ${__max_net_sndd[$name]} || ${sndd} -gt ${__max_net_sndd[$name]} ]]; then
+                    __max_net_sndd[$name]=${sndd}
+                fi
+                if [[ ! -z ${__net_str} ]]; then
+                    __net_str="${__net_str} $(__fg 15) "
+                fi
+                __net_str="${__net_str}\ue8d5 ${name} $(__network_format ${sndd} ${__max_net_sndd[$name]} ${1}) $(__fg 15)/ $(__network_format ${rcvd} ${__max_net_rcvd[$name]} ${1})"
             fi
-            if [[ -z ${__max_net_sndd[$name]} || ${sndd} -gt ${__max_net_sndd[$name]} ]]; then
-                __max_net_sndd[$name]=${sndd}
-            fi
-            if [[ ! -z ${__net_str} ]]; then
-                __net_str="${__net_str} $(__fg 15) "
-            fi
-            __net_str="${__net_str}\ue8d5 ${name} $(__network_format ${sndd} ${__max_net_sndd[$name]} ${1}) $(__fg 15)/ $(__network_format ${rcvd} ${__max_net_rcvd[$name]} ${1})"
+            __prev_net_rcv[$name]=${rcv}
+            __prev_net_snd[$name]=${snd}
         fi
-        __prev_net_rcv[$name]=${rcv}
-        __prev_net_snd[$name]=${snd}
     done <<<"$(cat /proc/net/dev | grep ':' | grep -v 'lo' | awk '{print $1,$2,$10}')"
 }
 
