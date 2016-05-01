@@ -9,3 +9,4 @@ alias gca="git commit -a"
 
 set -x EDITOR nvim
 set -x DOTFILES $HOME/.dotfiles
+set -x _JAVA_AWT_WM_NONREPARENTING 1
