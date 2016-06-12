@@ -5,5 +5,5 @@
 * ```~/.dotfiles/scripts/bootstrap```
 * ```~/.dotfiles/scripts/install```
 * ```vim +PlugInstall```
-* ```chsh -s /usr/bin/fish```
+* ```chsh -s /bin/zsh```
 
