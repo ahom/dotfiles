@@ -1,3 +1,3 @@
 #! /bin/sh
 
-sudo pacman -Sy --noconfirm fish
+sudo pacman -Sy --noconfirm zsh
