@@ -142,7 +142,7 @@ __network() {
             __prev_net_rcv[$name]=${rcv}
             __prev_net_snd[$name]=${snd}
         fi
-    done <<<"$(cat /proc/net/dev | grep ':' | grep -v 'lo' | awk '{print $1,$2,$10}')"
+    done <<<"$(cat /proc/net/dev | grep ':' | grep -e '^\s*en' -e '^\s*wl' | awk '{print $1,$2,$10}')"
 }
 
 __volume_str=""
