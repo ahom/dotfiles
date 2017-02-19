@@ -1,3 +1,9 @@
 export EDITOR=nvim
-export DOTFILES=$HOME/.dotfiles
 export _JAVA_AWT_WM_NONREPARENTING=1
+
+export DOTFILES=~/.dotfiles
+export XDG_CONFIG_HOME=$HOME/.config
+export PATH=$DOTFILES/bin:$PATH
+export SDL_VIDEO_X11_DGAMOUSE=0
+
+source $DOTFILES/shell/prompt.sh
