@@ -109,7 +109,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", dmenunormbgcolor, "-nf", dmenunormfgcolor, "-sb", dmenuselbgcolor, "-sf", dmenuselfgcolor, NULL };
 static const char *termcmd[]  = { "xterm", NULL };
 static const char *lockcmd[]  = { "slock", NULL }; 
-static const char *screencmd[]  = { "maim -s", NULL }; 
+static const char *screencmd[]  = { "maim", "-s", NULL }; 
 
 static Key keys[] = {
     /* modifier                     key        function        argument */

@@ -2,4 +2,4 @@ xrdb -merge $HOME/.Xresources
 feh --bg-scale -. "$HOME/.wallpapers"&
 xautolock -time 10 -locker slock&
 /bin/sh $DOTFILES/wm/bar.sh&
-exec dwm
+exec dwm >~/dwm.log 2>~/dwm.err.log
