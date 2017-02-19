@@ -12,7 +12,7 @@ source=(http://dl.suckless.org/dwm/dwm-${pkgver}.tar.gz
         01-dwm-6.1-ansicolors.diff
         02-dwm-6.1-pertag.diff)
 md5sums=('f0b6b1093b7207f89c2a90b848c008ec'
-         '90790761ab89d7f30c8f9412fa261e53'
+         'ea47621bb5586a1c84b50c17b477a5eb'
          '0caa29a29bdec3581a744aa01a5c18d7'
          '3126263695676ffa7ab7d90e49bd77cb')
 
