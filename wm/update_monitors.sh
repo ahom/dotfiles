@@ -1,5 +1,8 @@
 #! /bin/sh
 
+export DISPLAY=":0"
+export XAUTHORITY="/home/ahom/.Xauthority"
+
 LAPTOP_SCREEN=$1
 
 CONNECTED_SCREENS=$(xrandr | grep " connected " | cut -f 1 -d " ")
