@@ -1,6 +1,7 @@
 call plug#begin()
 Plug 'bling/vim-airline'
 Plug 'godlygeek/tabular'
+Plug 'derekwyatt/vim-scala'
 call plug#end()
 
 syntax on
