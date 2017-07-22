@@ -1,5 +1,5 @@
 xterm*termName: xterm-256color
-xterm*faceName: Inconsolata for Powerline:size=12:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=default
+xterm*faceName: Inconsolata for Powerline:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=default
 xterm*utf8:     1
 
 xterm*background:   rgb:1d/1f/21
