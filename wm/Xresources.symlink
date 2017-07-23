@@ -1,0 +1,24 @@
+*utf8:     1
+
+*background:   rgb:1d/1f/21
+*foreground:   rgb:c5/c8/c6
+
+*color0:       rgb:28/2a/2e
+*color1:       rgb:a5/42/42
+*color2:       rgb:8c/94/40
+*color3:       rgb:de/93/5f
+*color4:       rgb:5f/81/9d
+*color5:       rgb:85/67/8f
+*color6:       rgb:5e/8d/87
+*color7:       rgb:70/78/80
+
+*color8:       rgb:37/3b/41
+*color9:       rgb:cc/66/66
+*color10:      rgb:b5/bd/68
+*color11:      rgb:f0/c6/74
+*color12:      rgb:81/a2/be
+*color13:      rgb:b2/94/bb
+*color14:      rgb:8a/be/b7
+*color15:      rgb:c5/c8/c6
+
+*cursorColor:  rgb:c3/ff/00

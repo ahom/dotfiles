@@ -1,11 +1,12 @@
 /* See LICENSE file for copyright and license details. */
 
-#define DEFAULT_FONT "Inconsolata for Powerline:size=12:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
+//#define DEFAULT_FONT "Fira Code:size=12:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
+#define DEFAULT_FONT "Fira Code:size=11:style=bold:antialias=true"
 
 /* appearance */
 static const char *fonts[] = {
     DEFAULT_FONT,
-    "Material Icons:size=12:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
+    "Material Icons:size=11:antialias=true:autohint=false:lcdfilter=lcddefault:hinting=true:hintstyle=hintfull"
 };
 static const char dmenufont[]         = DEFAULT_FONT;
 static const char dmenunormbgcolor[] = "#1d1f21";
@@ -107,7 +108,7 @@ static const char monocleformat[] = " \033[38;5;16m\033[45m \033[38;5;15m\ue3
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", dmenunormbgcolor, "-nf", dmenunormfgcolor, "-sb", dmenuselbgcolor, "-sf", dmenuselfgcolor, NULL };
-static const char *termcmd[]  = { "xterm", NULL };
+static const char *termcmd[]  = { "konsole", NULL };
 static const char *lockcmd[]  = { "slock", NULL }; 
 static const char *screencmd[]  = { "maim", "-s", NULL }; 
 

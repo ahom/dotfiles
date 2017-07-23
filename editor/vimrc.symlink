@@ -2,8 +2,6 @@ call plug#begin()
 Plug 'bling/vim-airline'
 Plug 'godlygeek/tabular'
 Plug 'derekwyatt/vim-scala'
-Plug 'ehamberg/vim-cute-python'
-Plug 'twinside/vim-haskellconceal'
 call plug#end()
 
 syntax on
