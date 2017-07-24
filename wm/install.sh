@@ -1,6 +1,6 @@
 #! /bin/sh
 
-sudo pacman -Sy --noconfirm xorg-server xorg-xinit xorg-server-utils xautolock dmenu slock feh wget maim slop
+sudo pacman -Sy --noconfirm xorg-server xorg-xinit xorg-xsetroot xautolock dmenu slock feh wget maim slop
 
 WP_DIR=${HOME}/.wallpapers
 mkdir ${WP_DIR}
