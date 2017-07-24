@@ -149,7 +149,7 @@ __volume_str=""
 __volume() {
     local volume
     local mute
-    read volume mute <<<"$(amixer sget PCM | grep "%" | head -1 | awk -F"[][]" '{ print $2,$6 }')"
+    read volume mute <<<"$(amixer sget Master | grep "%" | head -1 | awk -F"[][]" '{ print $2,$6 }')"
     if [[ "${mute}" = "off" ]]; then
         __volume_str="$(__fg 1)\ue04f$(__fg 15)"
     else
