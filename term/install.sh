@@ -1,4 +1,3 @@
 #! /bin/sh
 
-sudo pacman --noconfirm -Sy konsole 
-
+sudo pacman --noconfirm -Sy xterm 

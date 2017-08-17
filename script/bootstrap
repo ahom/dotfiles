@@ -140,16 +140,6 @@ install_dotfiles () {
     dst="$HOME/.config/$(basename "${src%.*}")"
     link_file "$src" "$dst"
   done
-
-  if [ ! -d "$HOME/.local/share" ]; then
-    mkdir -p "$HOME/.local/share"
-  fi
-
-  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.sharesymlink')
-  do
-    dst="$HOME/.local/share/$(basename "${src%.*}")"
-    link_file "$src" "$dst"
-  done
 }
 
 setup_gitconfig
