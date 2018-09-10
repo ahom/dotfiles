@@ -7,3 +7,13 @@ export PATH=$DOTFILES/bin:$PATH
 export SDL_VIDEO_X11_DGAMOUSE=0
 
 source $DOTFILES/shell/prompt.sh
+
+export PATH=$PATH:$HOME/.local/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
+
+source "$HOME/.local/lib/python3.7/site-packages/powerline/bindings/zsh/powerline.zsh"
+
+if [ -f "$HOME/.zshenv.user" ]
+then
+    source $HOME/.zshenv.user
+fi

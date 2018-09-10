@@ -38,3 +38,7 @@ bindkey "^[[B" history-beginning-search-forward
 bindkey "^[[3~" delete-char
 bindkey "^?" backward-delete-char
 
+if [ -f "$HOME/.zshrc.user" ]
+then
+    source $HOME/.zshrc.user
+fi
