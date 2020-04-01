@@ -10,7 +10,7 @@ set -sg escape-time 0
 set-option -g history-limit 10000
 
 unbind C-b
-set -g prefix ²
+set -g prefix `
 
 bind -n M-Left select-pane -L
 bind -n M-Right select-pane -R
